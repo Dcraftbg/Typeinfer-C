@@ -167,6 +167,10 @@ void infer_down_ast(AST* ast, Type type) {
     switch(ast->kind) {
     case AST_SYM: {
         Symbol* s = ast->as.sym.symbol;
+        if(s->type) {
+            ast->type = s->type;
+            return;
+        }
         s->type = type;
         for(size_t i = 0; i < s->infer_asts.len; ++i) {
             s->infer_asts.items[i]->type = type;
@@ -222,7 +226,7 @@ int main(void) {
     AST* expr = 
         ast_binop_new(
             '+',
-            ast_int(TYPE_UNKNOWN, 3),
+            ast_int(TYPE_INT16, 3),
             ast_binop_new(
                 '*',
                 ast_int(TYPE_UNKNOWN, 4),
